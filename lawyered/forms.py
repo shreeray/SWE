@@ -1,9 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
 import datetime
+from .models import divorceForm
+
 class LoginForm(forms.Form):
 	username = forms.CharField()
 	password = forms.CharField(widget=forms.PasswordInput)
+
+	
 class UserRegistrationForm(forms.ModelForm):
 	password = forms.CharField(label='Password',widget=forms.PasswordInput)
 	password2 = forms.CharField(label='Repeat password',widget=forms.PasswordInput)
@@ -21,7 +25,9 @@ class UserRegistrationForm(forms.ModelForm):
 class SearchForm(forms.Form):
 	query = forms.CharField()
 
-ASSETS = (
+
+class divorcecaseForm(forms.ModelForm):
+	ASSETS = (
     ('residential_property', 'Residential Property'),
     ('investment_property', 'Investmant Property'),
     ('investment_account', ' Investment Account(s) (stocks, bonds, mutual funds, etc.) '),
@@ -30,11 +36,7 @@ ASSETS = (
     ('business','Business interest(s)'),
     ('personal_property','Personal property (jewelry, cars, furniture, appliances, etc.) '),
     ('others','Others'),
-    
-)
-class divorceForm(forms.Form):
-	spouse = forms.CharField(label='What is your Spouse\'s name?', max_length = 25)
-	date_of_marriage = forms.DateField(initial=datetime.date.today,label = 'What was your Date of Marriage?')
+    )
 	CHOICES1 = (('1', 'Yes',), ('2', 'No',),('3','Not Sure',))
 	CHOICES2 = (('1', 'Male',), ('2', 'Female',))
 	CHOICES3 = (('1', 'Yes',), ('2', 'No',))
@@ -44,5 +46,19 @@ class divorceForm(forms.Form):
 	assets_before = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,choices=ASSETS, label = 'What Assets did spouse acquire after marriage? (Select All that Apply)')
 	children = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES3, label = 'Do you have children?')
 	custody = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES1, label = 'Will either spouse be asking for child support?')
-	budget = forms.CharField(label='What is your estimated budget?')
-	details = forms.CharField(label='Further Details')
+
+	class Meta:
+		model = divorceForm
+		fields = [
+			'name',
+			'spouse',
+			'date_of_marriage',
+			'gender',
+			'mutual',
+			'assets',
+			'assets_before',
+			'children',
+			'custody',
+			'budget',
+			'details',
+		]

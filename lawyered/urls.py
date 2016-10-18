@@ -10,7 +10,7 @@ app_name = 'lawyered'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 #    url(r'^login/$', views.login, {'template_name' : 'login.html'}),
-    url(r'^login/$', views.login, name='login'),
+    url(r'^login/$', views.login_view, name='login'),
     url(r'^login/$',login, name = 'login'),
 	url(r'^logout/$',logout, {'next_page': '/lawyered'}, name='logout'),
 	url(r'^register/$', views.register, name='register'),

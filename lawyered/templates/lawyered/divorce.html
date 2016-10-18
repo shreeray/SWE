@@ -61,7 +61,7 @@
           <ul class="sidebar-menu" id="nav-accordion">
 
             <p class="centered"><a href="profile.html"><img src="{% static 'lawyered/assets/img/ui-sam.jpg' %}" class="img-circle" width="60"></a></p>
-            <h5 class="centered">kratigya</h5>
+            <h5 class="centered">{{ username }}</h5>
 
             <li class="mt">
               <a href="{% url 'lawyered:dashboard' %}">
@@ -106,6 +106,20 @@
                 <h4 class="mb"><i class="fa fa-angle-right"></i>Please Answer All The Questions</h4>
                 
                 <form action="." method="post">
+               {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
   {{ form.as_p }}
   {% csrf_token %}
   <p><input type="submit" value="Submit"></p>

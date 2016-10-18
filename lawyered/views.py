@@ -1,15 +1,17 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, UserRegistrationForm, divorceForm
+from .forms import LoginForm, UserRegistrationForm, divorcecaseForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from .models import person
+
+from django.contrib.auth.models import User
 # Create your views here.
 def index(request) :
 	return render(request, 'lawyered/index.html')
 	
-def login(request):
+def login_view(request):
 	if request.method== 'POST':
 
 		form = LoginForm(request.POST)
@@ -49,7 +51,8 @@ def register(request):
 
 @login_required
 def dashboard(request):
-	return render(request, 'lawyered/dashboard.html')
+	username = request.user.username
+	return render(request, 'lawyered/dashboard.html', {'username': username})
 
 
 def person_list(request):
@@ -57,17 +60,22 @@ def person_list(request):
 	query = request.GET.get("q")
 	if query:
 		persons = persons.filter(area__contains = query)
-	return render(request,'lawyered/search.html',{'persons': persons})
+	return render(request,'lawyered/search.html',{'persons': persons, 'username':request.user.username})
 	
 def divorce(request):
 	if request.method== 'POST':
 
-		form = divorceForm(request.POST)
+		form = divorcecaseForm(request.POST)
+
 		if form.is_valid():
 			
-			return render(request,'lawyered/done.html')
+			new_case = form.save(commit=False)
+			new_case.save()
+			return render(request,'lawyered/done.html', {'username':request.user.username})
+		else:
+			return render(request, 'lawyered/invalid.html')
 
 	else:
-		form = divorceForm()
-		return render(request, 'lawyered/divorce.html', {'form': form})
+		form = divorcecaseForm()
+		return render(request, 'lawyered/divorce.html', {'form': form, 'username':request.user.username})
 	
