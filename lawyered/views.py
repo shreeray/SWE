@@ -66,13 +66,13 @@ def divorce(request):
 	if request.method== 'POST':
 
 		form = divorcecaseForm(request.POST)
-
 		if form.is_valid():
 			
 			new_case = form.save(commit=False)
 			new_case.save()
 			return render(request,'lawyered/done.html', {'username':request.user.username})
 		else:
+			
 			return render(request, 'lawyered/invalid.html')
 
 	else:
